@@ -2,28 +2,27 @@ import React, { useState } from "react";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addUser } from "../../features/UserSlice";
+import { v4 as uuidv4 } from 'uuid';
 
 const FormData = ({ modalToggle, setModalToggle }) => {
-//   const {  } = useSelector((state) => state.users);
   const dispatch = useDispatch();
   const [userData, setUserData] = useState({
     name: "",
     email: "",
     phone: "",
   });
-  // console.log(initialState)
+
   const handleClose = () => setModalToggle(false);
   const handleChange = (e) => {
     let name = e.target.name;
     let value = e.target.value;
-    setUserData({ ...userData, [name]: value });
+    setUserData({ ...userData, id: uuidv4(),  [name]: value });
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(userData);
     dispatch(addUser(userData));
     setModalToggle(false);
   };
@@ -42,7 +41,7 @@ const FormData = ({ modalToggle, setModalToggle }) => {
                 placeholder="Enter Your Name"
                 autoFocus
                 name="name"
-                value={userData.name}
+                value={userData.userData?.name}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -53,7 +52,7 @@ const FormData = ({ modalToggle, setModalToggle }) => {
                 placeholder="name@example.com"
                 autoFocus
                 name="email"
-                value={userData.email}
+                value={userData.userData?.email}
                 onChange={handleChange}
               />
             </Form.Group>
@@ -64,7 +63,7 @@ const FormData = ({ modalToggle, setModalToggle }) => {
                 placeholder="Enter Your Phone Number"
                 autoFocus
                 name="phone"
-                value={userData.phone}
+                value={userData.userData?.phone}
                 onChange={handleChange}
               />
             </Form.Group>
