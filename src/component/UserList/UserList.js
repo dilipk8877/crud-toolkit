@@ -4,7 +4,7 @@ import "./UserList.css";
 import { AiOutlinePlusCircle } from "react-icons/ai";
 import FormData from "../modal/Modal";
 import { useDispatch, useSelector } from "react-redux";
-import { deleteUser, editUser, getUser, setModalOpen, setToggleUpdate } from "../../features/UserSlice";
+import { deleteUser, editIds, getUser, setModalOpen, setToggleUpdate } from "../../features/UserSlice";
 const UserList = () => {
   const [userData, setUserData] = useState({
     name: "",
@@ -20,13 +20,11 @@ const UserList = () => {
     dispatch(setModalOpen(true))
   };
   const handleEdit =(user)=>{
-    // let newEditItem =userList.find((current_value) => {
-    //   return current_value.id === id;
-    // });
+    console.log(user)
     dispatch(setToggleUpdate())
-    // dispatch(editUser(user))
+    dispatch(editIds(user.id))
     dispatch(setModalOpen(true))
-    setUserData(userData)
+    setUserData(user)
   }
   useEffect(() => {
     dispatch(getUser());

@@ -3,11 +3,11 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { useDispatch, useSelector } from "react-redux";
-import { addUser, editUser, setModalClose, setToggleClose } from "../../features/UserSlice";
+import { addUser, setModalClose, setToggleClose, updateUser } from "../../features/UserSlice";
 import { v4 as uuidv4 } from "uuid";
 
 const FormData = ({  setUserData, userData }) => {
-  const {toggleUpdate,modalOpen} = useSelector((state) => state.users);
+  const {toggleUpdate,modalOpen,editId} = useSelector((state) => state.users);
   const dispatch = useDispatch();
 
 
@@ -25,24 +25,22 @@ const FormData = ({  setUserData, userData }) => {
     e.preventDefault();
     dispatch(addUser(userData));
     dispatch(setModalClose(false))
-
+    setUserData("")
   };
-  const handleUpdate = (e) => {
-    dispatch(editUser());
+  const handleUpdate = () => {
+    dispatch(updateUser({userData,editId}));
     dispatch(setModalClose(false))
+    setUserData("")
   };
   return (
     <div>
       <Modal show={modalOpen} onHide={handleClose}>
-        <Modal.Header closeButton>
-          <Modal.Title>Modal heading</Modal.Title>
-        </Modal.Header>
         <Modal.Body>
           <Form>
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Enter Name</Form.Label>
               <Form.Control
-                type="email"
+                type="text"
                 placeholder="Enter Your Name"
                 autoFocus
                 name="name"
@@ -64,7 +62,7 @@ const FormData = ({  setUserData, userData }) => {
             <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
               <Form.Label>Phone Number</Form.Label>
               <Form.Control
-                type="email"
+                type="number"
                 placeholder="Enter Your Phone Number"
                 autoFocus
                 name="phone"

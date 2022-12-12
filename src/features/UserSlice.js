@@ -3,34 +3,68 @@ import axios from "axios";
 
 export const getUser = createAsyncThunk("user/getUser", async () => {
   try {
-    const res = await axios.get("https://jsonplaceholder.typicode.com/users");
+    const res = await axios.get("http://localhost:3004/users");
+    // thunkAPI.dispatch(getUser())
     return res.data;
   } catch (error) {
     console.log(error);
   }
 });
+
+export const deleteUser = createAsyncThunk(
+  "delete/getUser",
+  async (id, thunkAPI) => {
+    console.log(id);
+    try {
+      const res = await axios.delete(`http://localhost:3004/users/${id}`);
+      thunkAPI.dispatch(getUser(id));
+      return res.data;
+    } catch (error) {
+      console.log("error");
+    }
+  }
+);
+
+export const addUser = createAsyncThunk(
+  "add,getUser",
+  async (data, thunkAPI) => {
+    try {
+      const res = await axios.post("http://localhost:3004/users", data);
+      thunkAPI.dispatch(getUser(data));
+      return res.data;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+);
+
+export const updateUser = createAsyncThunk(
+  "update,getUser",
+  async (data, thunkAPI) => {
+    console.log(data)
+    try {
+      const res = axios.put(`http://localhost:3004/users/${data.editId}`,data.userData)
+      thunkAPI.dispatch(getUser())
+      return res.data
+    } catch (error) {
+      console.log(error);
+    }
+  }
+);
 const initialState = {
   userItem: [],
   status: null,
   toggleUpdate: true,
-  modalOpen:false
+  modalOpen: false,
+  editId: null,
 };
 
 const UserSlice = createSlice({
   name: "userItem",
   initialState,
   reducers: {
-    addUser: (state, action) => {
-      state.userItem.push(action.payload);
-    },
-    deleteUser: (state, action) => {
-      const id = action.payload;
-      state.userItem = state.userItem.filter((arrow) => arrow.id !== id);
-    },
-    editUser: (state, action) => {
-      state.userItem = state.userItem.map((el) =>
-      el.id == action.payload.id ? action.payload : el
-    );
+    editIds: (state, action) => {
+      state.editId = action.payload;
     },
     setToggleUpdate: (state, action) => {
       state.toggleUpdate = false;
@@ -38,13 +72,12 @@ const UserSlice = createSlice({
     setToggleClose: (state, action) => {
       state.toggleUpdate = true;
     },
-    setModalOpen:(state,action)=>{
-      state.modalOpen = action.payload
+    setModalOpen: (state, action) => {
+      state.modalOpen = action.payload;
     },
-    setModalClose:(state,action)=>{
-      state.modalOpen = action.payload
+    setModalClose: (state, action) => {
+      state.modalOpen = action.payload;
     },
-    
   },
   extraReducers: {
     [getUser.pending]: (state, action) => {
@@ -60,12 +93,10 @@ const UserSlice = createSlice({
   },
 });
 export const {
-  addUser,
-  deleteUser,
-  editUser,
+  editIds,
   setToggleUpdate,
   setToggleClose,
   setModalOpen,
-  setModalClose
+  setModalClose,
 } = UserSlice.actions;
 export default UserSlice.reducer;
